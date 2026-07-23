@@ -1,0 +1,53 @@
+# FastAPI
+fastapi>=0.116.0
+uvicorn[standard]>=0.35.0
+
+# Database
+sqlalchemy>=2.0.41
+alembic>=1.16.4
+psycopg2-binary>=2.9.10
+
+# Validation & Configuration
+pydantic>=2.11.7
+pydantic-settings>=2.10.1
+python-dotenv>=1.1.1
+
+# Authentication & Security
+python-jose[cryptography]>=3.5.0
+passlib[bcrypt]>=1.7.4
+bcrypt>=4.3.0
+
+# Forms & File Uploads
+python-multipart>=0.0.20
+
+# Redis
+redis>=6.2.0
+
+# HTTP Client
+httpx>=0.28.1
+requests>=2.32.4
+
+# Payment Providers
+stripe>=12.4.0
+
+# Logging
+loguru>=0.7.3
+
+# Utilities
+email-validator>=2.2.0
+orjson>=3.11.1
+
+# Async PostgreSQL (if using SQLAlchemy async)
+asyncpg>=0.30.0
+
+# Database driver alternative
+psycopg>=3.2.9
+
+# Rate limiting
+slowapi>=0.1.9
+
+# Background tasks / retries
+celery>=5.5.3
+
+# Monitoring
+prometheus-fastapi-instrumentator>=7.1.0
