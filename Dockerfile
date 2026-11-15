@@ -1,9 +1,8 @@
+
 FROM python:3.12-slim
 
-# Prevent Python from writing pyc files
+# Python environment
 ENV PYTHONDONTWRITEBYTECODE=1
-
-# Ensure logs are shown immediately
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
@@ -17,14 +16,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Python dependencies
 COPY requirements.txt .
 
-RUN pip install --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy application
+# Copy application code
 COPY . .
 
 # Expose FastAPI port
 EXPOSE 8000
 
-# Run application
-CMD ["python", "run.py"]
+# Start FastAPI server
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
