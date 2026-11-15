@@ -1,7 +1,7 @@
 from app.core.security import hash_password
-from app.models.user import User, UserRole
 from app.repositories import UserRepository
-from app.schemas.user import UserRegister
+from app.schemas.user import UserRegister,UserResponse
+from app.core.exceptions import ConflictError
 
 
 class UserService:
@@ -14,16 +14,12 @@ class UserService:
         existing = self.repo.get_by_email(payload.email)
 
         if existing:
-            raise ValueError("Email is already registered.")
+            raise ConflictError("Email is already registered.")
+        
+        
 
-        user = User(
-            first_name=payload.first_name,
-            last_name=payload.last_name,
-            email=payload.email,
-            password_hash=hash_password(payload.password),
-            address=payload.address,
-            role=UserRole.CUSTOMER,
-            is_active=True,
-        )
+        user = self.repo.create({**payload.model_dump(exclude={"password"}), "password_hash":hash_password(payload.password)})
+        user = UserResponse.model_validate(user)
+        
 
-        return self.repo.create(user)
+        return user

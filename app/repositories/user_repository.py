@@ -8,20 +8,19 @@ class UserRepository:
     def __init__(self):
         self.db = SessionManager()
 
-    def get_by_email(self, email: str) -> User | None:
+    def get_by_email(self, email):
         with self.db.session() as session:
             result = session.execute(
                 select(User).where(User.email == email)
-            )
+            ).scalar_one_or_none()
 
-        return result.scalar_one_or_none()
+        return result
 
-    def create(self, user: User) -> User:
+    def create(self, data):
+        user = User(**data)
         with self.db.session() as session:
             session.add(user)
-
             session.commit()
-
             session.refresh(user)
 
         return user
