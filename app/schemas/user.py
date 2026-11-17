@@ -1,5 +1,5 @@
 from uuid import UUID
-
+from typing import Optional
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
@@ -7,11 +7,14 @@ class UserRegister(BaseModel):
     first_name: str = Field(..., min_length=2, max_length=100)
     last_name: str = Field(..., min_length=2, max_length=100)
     email: EmailStr
-    password: str = Field(...)
-    address: str | None = Field(
-        default=None,
-        max_length=255,
-    )
+    password: str = Field(..., min_length=6)
+    address: Optional[str] = Field(default=None, max_length=255)
+
+
+class UserUpdate(BaseModel):
+    first_name: Optional[str] = Field(default=None, min_length=2, max_length=100)
+    last_name: Optional[str] = Field(default=None, min_length=2, max_length=100)
+    address: Optional[str] = Field(default=None, max_length=255)
 
 
 class UserResponse(BaseModel):
@@ -21,5 +24,6 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     email: EmailStr
+    address: Optional[str] = None
     role: str
     is_active: bool
