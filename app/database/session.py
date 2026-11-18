@@ -1,3 +1,4 @@
+from collections.abc import Generator
 from contextlib import contextmanager
 
 from sqlalchemy import create_engine
@@ -28,9 +29,8 @@ class SessionManager:
         return cls._instance
 
     @contextmanager
-    def session(self) -> Session:
+    def session(self) -> Generator[Session, None, None]:
         db = self._session_factory()
-
         try:
             yield db
             db.commit()
@@ -39,3 +39,9 @@ class SessionManager:
             raise
         finally:
             db.close()
+
+
+def get_db() -> Generator[Session, None, None]:
+    manager = SessionManager()
+    with manager.session() as db:
+        yield db

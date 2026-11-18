@@ -1,25 +1,26 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.api.router import router
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
+from app.core.config import settings
 from app.core.exceptions import AppError
+from app.api.router import router
+from app.middleware.logging import LoggingMiddleware
+
 app = FastAPI(
     title=settings.APP_NAME,
-    description="E-commerce Ordering & Payment System",
+    description="E-commerce Ordering & Payment System Backend",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
 )
 
-# Router
-app.include_router(router)
+# Custom Middlewares
+app.add_middleware(LoggingMiddleware)
 
-# Middleware
-
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
@@ -28,6 +29,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Exception Handlers
 @app.exception_handler(AppError)
 async def app_error_handler(request: Request, exc: AppError):
     return JSONResponse(
@@ -54,8 +56,11 @@ async def validation_error_handler(request: Request, exc: RequestValidationError
     )
 
 
-# Health Check
+# Routers
+app.include_router(router)
 
+
+# Health Checks
 @app.get("/", tags=["Root"])
 async def root():
     return {
