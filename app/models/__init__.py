@@ -1,6 +1,10 @@
-from .category import *
-from .order_item import *
-from .order import *
-from .payment import *
-from .product import *
-from .user import *
+from app.models.user import User, UserRole
+from app.models.category import Category
+from app.models.product import Product
+
+__all__ = [
+    "User",
+    "UserRole",
+    "Category",
+    "Product",
+]
